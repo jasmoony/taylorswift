@@ -1,4 +1,8 @@
-let songs = [ {
+export type Song = {
+  albumTitle: string,
+  songTitle: string,
+};
+export let songs = [ {
       albumTitle: "Taylor Swift",
       songTitle: "Tim McGraw",
     },
