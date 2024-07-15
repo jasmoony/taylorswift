@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const myFont = localFont({
+  src: "../public/pistilliroman.otf",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Suprise Song Generator",
@@ -16,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-cupid-200 text-ebonyclay-950`}>
+      <body className={`${myFont.className} bg-cupid-200 text-ebonyclay-950`}>
         {children}
       </body>
     </html>

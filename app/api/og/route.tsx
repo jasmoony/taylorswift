@@ -1,5 +1,8 @@
 import { ImageResponse } from "next/og";
 import { songs } from "@/app/songs";
+import { tours } from "@/app/tourdates";
+
+export const runtime = "edge";
 
 type Album = {
   title: string;
@@ -18,7 +21,7 @@ let albums = [
     alt: "debut",
   },
   {
-    title: "Fearless (Taylor's Version)",
+    title: "Fearless",
     colour: "#efc180",
     src: "/fearless.jpeg",
     alt: "fearless",
@@ -30,19 +33,19 @@ let albums = [
     alt: "midnights",
   },
   {
-    title: "Speak Now (Taylor's Version)",
+    title: "Speak Now",
     colour: "#c7a8cb",
     src: "/speaknow.jpeg",
     alt: "speak now",
   },
   {
-    title: "Red (Taylor's Version)",
+    title: "Red",
     colour: "#7a2e39",
     src: "/red.jpeg",
     alt: "red",
   },
   {
-    title: "1989 (Taylor's Version)",
+    title: "1989",
     colour: "#b5e5f8",
     src: "/1989.jpeg",
     alt: "1989",
@@ -80,60 +83,88 @@ let albums = [
 ];
 
 export async function GET(request: Request) {
+  const fontData = await fetch(
+    new URL("../../../public/pistilliroman.ttf", import.meta.url)
+  ).then((res) => res.arrayBuffer());
+
   const { searchParams } = new URL(request.url);
 
   const location = searchParams.get("location") as string;
   const date = searchParams.get("date") as string;
-  const songOne = searchParams.get("songone") as string;
-  const songTwo = searchParams.get("songtwo") as string;
+  const surpriseSongs = searchParams.get("songs");
+  console.log({ surpriseSongs });
 
-  console.log(songOne, songTwo);
+  const surpriseSongsArray = surpriseSongs?.split(",");
+  console.log(surpriseSongsArray);
 
-  let albumOne = songs.find((song) => song.songTitle == songOne)?.albumTitle;
-  console.log(albumOne);
+  let playedAlbumsArray = surpriseSongsArray?.map((surpriseSong) => {
+    return songs.find(
+      (song) => song.songTitle.toLowerCase() == surpriseSong.toLowerCase()
+    )?.albumTitle;
+  });
 
-  let albumTwo = songs.find((song) => song.songTitle == songTwo)?.albumTitle;
-  console.log(albumTwo);
+  console.log(playedAlbumsArray);
 
-  let imageSourceOne = albums.find((album) => album.title == albumOne)?.src;
-  let imageSourceTwo = albums.find((album) => album.title == albumTwo)?.src;
+  let imageSourcesArray = playedAlbumsArray?.map((playedAlbum) => {
+    return baseURL + albums.find((album) => album.title == playedAlbum)?.src;
+  });
 
-  console.log(imageSourceOne, imageSourceTwo);
-
-  let imageOne = albumOne ? baseURL + imageSourceOne : baseURL + "/guitar.jpeg";
-  let imageTwo = albumTwo ? baseURL + imageSourceTwo : baseURL + "/piano.jpeg";
-
-  let altOne = "guitar";
-  let altTwo = "piano";
+  console.log(imageSourcesArray);
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          fontSize: 40,
-          color: "black",
-          background: "radial-gradient(circle, #EF6153, #FFBDDF)",
-          width: "100%",
-          height: "100%",
-          padding: "50px 200px",
-          textAlign: "center",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {location}
-        {date}
-        {songOne}
-        {songTwo}
-        <img src={imageOne} width={500} height={500} alt={altOne} />
-        <img src={imageTwo} width={500} height={500} alt={altTwo} />
-      </div>
+      <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            fontSize: 20,
+            color: "black",
+            background: "radial-gradient(circle, #EF6153, #FFBDDF)",
+            width: "100%",
+            height: "100%",
+            padding: "50px 200px",
+            textAlign: "center",
+            justifyContent: "center",
+            alignItems: "center",
+            fontFamily: "pistilliroman",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <div style={{ display: "flex" }}>
+              <div>{date}</div>
+              <div>{location}</div>
+              <div>{surpriseSongs}</div>
+            </div>
+          </div>
+          {imageSourcesArray ? (
+            <img
+              src={imageSourcesArray[0]}
+              width={100}
+              height={100}
+              alt="album cover"
+            />
+          ) : (
+            <img
+              src={"http://localhost:3000/default"}
+              width={250}
+              height={250}
+              alt="taylor swift eras tour"
+            />
+          )}
+        </div>
+      </>
     ),
     {
-      width: 1200,
-      height: 630,
+      width: 320,
+      height: 480,
+      fonts: [
+        {
+          name: "pistilliroman",
+          data: fontData,
+          style: "normal",
+        },
+      ],
     }
   );
 }

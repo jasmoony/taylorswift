@@ -6,54 +6,38 @@ import {
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
+  ComboboxButton,
   Field,
 } from "@headlessui/react";
-import { songs } from "../songs";
-import type { Song } from "../songs";
+import { tours } from "../tourdates";
+import { Tour } from "../tourdates";
 
 export function SongForm() {
   const [imageURL, setImageURL] = useState("");
 
-  // State for the first song combobox
-  const [selectedSongOne, setSelectedSongOne] = useState("type song");
-  const [queryOne, setQueryOne] = useState("");
+  const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+  const [query, setQuery] = useState("");
 
-  // State for the second song combobox
-  const [selectedSongTwo, setSelectedSongTwo] = useState("type song");
-  const [queryTwo, setQueryTwo] = useState("");
-
-  const filteredSongsOne =
-    queryOne === ""
-      ? songs
-      : songs.filter((song) => {
-          return song.songTitle.toLowerCase().includes(queryOne.toLowerCase());
-        });
-
-  const filteredSongsTwo =
-    queryTwo === ""
-      ? songs
-      : songs.filter((song) => {
-          return song.songTitle.toLowerCase().includes(queryTwo.toLowerCase());
+  const filteredCity =
+    query === ""
+      ? tours
+      : tours.filter((tour) => {
+          return tour.city.toLowerCase().includes(query.toLowerCase());
         });
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const locationInput = form.get("location") as string;
-    const dateInput = form.get("date") as string;
-    const songOneInput = form.get("songone") as string;
-    const songTwoInput = form.get("songtwo") as string;
+    if (selectedTour) {
+      const newSearchParams = new URLSearchParams({
+        location: selectedTour.city,
+        date: selectedTour.date,
+        songs: selectedTour.songs,
+      });
 
-    const newSearchParams = new URLSearchParams({
-      location: locationInput,
-      date: dateInput,
-      songone: songOneInput,
-      songtwo: songTwoInput,
-    });
-
-    let imageURL = `/api/og/?${newSearchParams.toString()}`;
-    console.log(imageURL);
-    setImageURL(imageURL);
+      let imageURL = `/api/og/?${newSearchParams.toString()}`;
+      console.log(imageURL);
+      setImageURL(imageURL);
+    }
   }
 
   return (
@@ -63,113 +47,64 @@ export function SongForm() {
         onSubmit={handleSubmit}
         autoComplete="off"
       >
-        <input
-          className="p-2 mb-2 rounded-lg"
-          type="text"
-          id="location"
-          name="location"
-          placeholder="amsterdam"
-          required
-        />
-        <input
-          className="p-2 mb-2 rounded-lg"
-          type="date"
-          id="date"
-          name="date"
-          required
-        />
         <div className="flex flex-col relative">
-          <span>on guitar:</span>
           <div className="flex flex-row">
             <Field>
               <Combobox
-                value={selectedSongOne}
+                value={selectedTour}
                 onChange={(value) => {
+                  console.log("value:", value);
                   if (value) {
-                    setSelectedSongOne(value);
+                    setSelectedTour(value);
                   }
                 }}
-                onClose={() => setQueryOne("")}
+                onClose={() => setQuery("")}
               >
-                <ComboboxInput
-                  aria-label="Song one"
-                  displayValue={(song: Song) => song?.songTitle}
-                  onChange={(event) => setQueryOne(event.target.value)}
-                  className="p-2 mb-2 rounded-lg"
-                  placeholder="type song"
-                  type="text"
-                  id="songone"
-                  name="songone"
-                  required
-                />
+                <div>
+                  <ComboboxInput
+                    aria-label="location"
+                    displayValue={(tour: Tour | null) => {
+                      if (tour) {
+                        return tour.city + " " + tour.date;
+                      } else {
+                        return "";
+                      }
+                    }}
+                    onChange={(event) => setQuery(event.target.value)}
+                    className="p-2 mb-2 rounded-lg"
+                    placeholder="enter city"
+                    type="text"
+                    id="location"
+                    name="location"
+                    required
+                  />
+                  <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
+                    👇
+                  </ComboboxButton>
+                </div>
                 <ComboboxOptions
                   anchor="bottom"
                   className="w-[var(--input-width)] border empty:invisible"
                 >
-                  {filteredSongsOne.map((song) => (
+                  {filteredCity.map((tour) => (
                     <ComboboxOption
-                      key={song.songTitle}
-                      value={song}
+                      key={`${tour.city} ${tour.date}`}
+                      value={tour}
                       className="data-[focus]:bg-sunset-500"
                     >
-                      {song.songTitle}
+                      {`${tour.city} ${tour.date}`}
                     </ComboboxOption>
                   ))}
                 </ComboboxOptions>
               </Combobox>
             </Field>
           </div>
-          <button className="text-sunset-500 text-5xl">+</button>
         </div>
-        <div className="flex flex-col relative">
-          <Field>
-            <span>on piano:</span>
-            <div className="flex flex-row">
-              <Combobox
-                value={selectedSongTwo}
-                onChange={(value) => {
-                  if (value) {
-                    setSelectedSongTwo(value);
-                  }
-                }}
-                onClose={() => setQueryTwo("")}
-              >
-                <ComboboxInput
-                  aria-label="Song two"
-                  displayValue={(song: Song) => song?.songTitle}
-                  onChange={(event) => setQueryTwo(event.target.value)}
-                  className="p-2 mb-2 rounded-lg"
-                  placeholder="type song"
-                  type="text"
-                  id="songtwo"
-                  name="songtwo"
-                  required
-                />
-                <ComboboxOptions
-                  anchor="bottom"
-                  className=" w-[var(--input-width)] border empty:invisible"
-                >
-                  {filteredSongsTwo.map((song) => (
-                    <ComboboxOption
-                      key={song.songTitle}
-                      value={song}
-                      className="data-[focus]:bg-sunset-500"
-                    >
-                      {song.songTitle}
-                    </ComboboxOption>
-                  ))}
-                </ComboboxOptions>
-              </Combobox>
-              <button className="text-sunset-500 text-5xl">+</button>
-            </div>
-          </Field>
-        </div>
-        <button type="submit" className="bg-sunset-500 rounded-lg">
+        <button type="submit" className="bg-sunset-500 rounded-lg m-4 w-15">
           Submit
         </button>
       </form>
-
-      <img src={imageURL} alt="Generated" />
+      <img src={imageURL} />
     </>
   );
 }
