@@ -844,14 +844,14 @@ export type Tour = {
         city: "Amsterdam",
         country: "Netherlands",
         images: [],
-        songs: ["I'm Gonna Get You Back", "Dress" , "You Are in Love", "Cowboy Like Me"]
+        songs: ["imgonnagetyouback", "Dress" , "You Are in Love", "Cowboy Like Me"]
       },
       {
         date: "06-07-2024",
         city: "Amsterdam",
         country: "Netherlands",
         images: [],
-        songs: ["Sweeter Than Fiction", "Holy Ground" , "Mary's Song (Oh My My My)", "So High School", "Everything Has Changed"]
+        songs: ["Sweeter Than Fiction", "Holy Ground", "Mary's Song (Oh My My My)", "So High School", "Everything Has Changed"]
       },
       {
         date: "09-07-2024",

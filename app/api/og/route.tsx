@@ -95,7 +95,6 @@ export async function GET(request: Request) {
   console.log({ surpriseSongs });
 
   const surpriseSongsArray = surpriseSongs?.split(",");
-  console.log(surpriseSongsArray);
 
   let playedAlbumsArray = surpriseSongsArray?.map((surpriseSong) => {
     return songs.find(
@@ -121,21 +120,25 @@ export async function GET(request: Request) {
             fontSize: 20,
             color: "black",
             background: "radial-gradient(circle, #EF6153, #FFBDDF)",
-            width: "100%",
-            height: "100%",
-            padding: "50px 200px",
+            width: "320px",
+            height: "480px",
+            padding: "4px 10px",
             textAlign: "center",
             justifyContent: "center",
             alignItems: "center",
             fontFamily: "pistilliroman",
+            border: "#FF0000",
           }}
         >
-          <div style={{ display: "flex" }}>
-            <div style={{ display: "flex" }}>
-              <div>{date}</div>
-              <div>{location}</div>
-              <div>{surpriseSongs}</div>
-            </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              border: "#FF0000",
+              columnGap: "20px",
+            }}
+          >
+            {location + " " + date}
           </div>
           {imageSourcesArray ? (
             <img
@@ -143,15 +146,35 @@ export async function GET(request: Request) {
               width={100}
               height={100}
               alt="album cover"
+              style={{ padding: "8px", border: "#FF0000" }}
             />
           ) : (
             <img
               src={"http://localhost:3000/default"}
-              width={250}
-              height={250}
+              width={100}
+              height={100}
               alt="taylor swift eras tour"
             />
           )}
+          <div style={{ display: "flex", border: "#FF0000" }}>
+            <div style={{ display: "flex", border: "#FF0000", padding: "2px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  rowGap: "8px",
+                }}
+              >
+                {surpriseSongsArray?.map((surpriseSong, i) => {
+                  return (
+                    <div key={i} style={{ display: "flex", border: "#FF0000" }}>
+                      {surpriseSong}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </>
     ),

@@ -84,7 +84,7 @@ export function SongForm() {
                 </div>
                 <ComboboxOptions
                   anchor="bottom"
-                  className="w-[var(--input-width)] border empty:invisible"
+                  className=" bg-cosmos-200 w-[var(--input-width)] border empty:invisible"
                 >
                   {filteredCity.map((tour) => (
                     <ComboboxOption
