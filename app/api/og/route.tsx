@@ -51,9 +51,9 @@ let albums = [
     alt: "1989",
   },
   {
-    title: "Reputation",
+    title: "reputation",
     colour: "#746f70",
-    src: "/reputation.jpeg",
+    src: "/reputation.png",
     alt: "reputation",
   },
   {
@@ -71,7 +71,7 @@ let albums = [
   {
     title: "evermore",
     colour: "#c5ac90",
-    src: "/evermore.jpeg",
+    src: "/evermore.png",
     alt: "evermore",
   },
   {
@@ -79,6 +79,12 @@ let albums = [
     colour: "#EDECE8",
     src: "/ttpd.jpeg",
     alt: "ttpd",
+  },
+  {
+    title: "other",
+    colour: "#EF6153",
+    src: "/default.jpeg",
+    alt: "default",
   },
 ];
 
@@ -91,12 +97,12 @@ export async function GET(request: Request) {
 
   const location = searchParams.get("location") as string;
   const date = searchParams.get("date") as string;
-  const surpriseSongs = searchParams.get("songs");
+  const surpriseSongs = searchParams.get("songs") as string;
   console.log({ surpriseSongs });
 
-  const surpriseSongsArray = surpriseSongs?.split(",");
+  const surpriseSongsArray = surpriseSongs.split(",");
 
-  let playedAlbumsArray = surpriseSongsArray?.map((surpriseSong) => {
+  let playedAlbumsArray = surpriseSongsArray.map((surpriseSong) => {
     return songs.find(
       (song) => song.songTitle.toLowerCase() == surpriseSong.toLowerCase()
     )?.albumTitle;
@@ -104,7 +110,17 @@ export async function GET(request: Request) {
 
   console.log(playedAlbumsArray);
 
-  let imageSourcesArray = playedAlbumsArray?.map((playedAlbum) => {
+  let uniqueAlbumsArray = playedAlbumsArray.filter(function (
+    value,
+    index,
+    array
+  ) {
+    return array.indexOf(value) === index;
+  });
+
+  console.log(uniqueAlbumsArray);
+
+  let imageSourcesArray = uniqueAlbumsArray.map((playedAlbum) => {
     return baseURL + albums.find((album) => album.title == playedAlbum)?.src;
   });
 
@@ -117,70 +133,325 @@ export async function GET(request: Request) {
           style={{
             display: "flex",
             flexDirection: "column",
-            fontSize: 20,
+            fontSize: 40,
             color: "black",
             background: "radial-gradient(circle, #EF6153, #FFBDDF)",
-            width: "320px",
-            height: "480px",
-            padding: "4px 10px",
-            textAlign: "center",
-            justifyContent: "center",
+            width: "640px",
+            height: "960px",
+            padding: "4px",
+            justifyContent: "space-between",
             alignItems: "center",
             fontFamily: "pistilliroman",
-            border: "#FF0000",
           }}
         >
+          {" "}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                justifyContent: "center",
+                padding: "2px",
+              }}
+            >
+              The Eras Tour
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                padding: "2px",
+                justifyContent: "center",
+              }}
+            >
+              {" "}
+              <div
+                style={{
+                  paddingRight: "2px",
+                }}
+              >
+                {location}
+              </div>
+              <div> 🫶 </div>
+              <div
+                style={{
+                  paddingLeft: "2px",
+                }}
+              >
+                {date}
+              </div>
+            </div>
+          </div>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
-              border: "#FF0000",
-              columnGap: "20px",
+              columnGap: "4x",
             }}
           >
-            {location + " " + date}
-          </div>
-          {imageSourcesArray ? (
-            <img
-              src={imageSourcesArray[0]}
-              width={100}
-              height={100}
-              alt="album cover"
-              style={{ padding: "8px", border: "#FF0000" }}
-            />
-          ) : (
-            <img
-              src={"http://localhost:3000/default"}
-              width={100}
-              height={100}
-              alt="taylor swift eras tour"
-            />
-          )}
-          <div style={{ display: "flex", border: "#FF0000" }}>
-            <div style={{ display: "flex", border: "#FF0000", padding: "2px" }}>
-              <div
+            {/* check if there are images found */}
+            {imageSourcesArray.length == 1 ? (
+              <img
+                src={imageSourcesArray[0]}
+                width={450}
+                height={450}
+                alt="album cover"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  rowGap: "8px",
+                  padding: "8px",
                 }}
-              >
-                {surpriseSongsArray?.map((surpriseSong, i) => {
-                  return (
-                    <div key={i} style={{ display: "flex", border: "#FF0000" }}>
-                      {surpriseSong}
-                    </div>
-                  );
-                })}
-              </div>
+              />
+            ) : imageSourcesArray.length == 2 ? (
+              <>
+                <img
+                  src={imageSourcesArray[0]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[1]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+              </>
+            ) : imageSourcesArray.length == 3 ? (
+              <>
+                <img
+                  src={imageSourcesArray[0]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    marginLeft: "-10px",
+                    transform: "rotate(-10deg)",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[1]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    marginRight: "10px",
+                    transform: "rotate(10deg)",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[2]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    marginLeft: "150px",
+                    marginTop: "200px",
+                    position: "absolute",
+                  }}
+                />
+              </>
+            ) : imageSourcesArray.length == 4 ? (
+              <>
+                <img
+                  src={imageSourcesArray[0]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    marginLeft: "100px",
+                    marginTop: "100px",
+                    transform: "rotate(-10deg)",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[1]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    marginRight: "10px",
+                    transform: "rotate(10deg)",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[2]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    marginLeft: "-10px",
+                    transform: "rotate(-10deg)",
+                    marginTop: "200px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[3]}
+                  width={300}
+                  height={300}
+                  alt="album cover"
+                  style={{
+                    marginRight: "10px",
+                    transform: "rotate(10deg)",
+                    marginTop: "200px",
+                  }}
+                />
+              </>
+            ) : imageSourcesArray.length == 5 ? (
+              <>
+                <img
+                  src={imageSourcesArray[0]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[1]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[2]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[3]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[4]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+              </>
+            ) : imageSourcesArray.length >= 6 ? (
+              <>
+                <img
+                  src={imageSourcesArray[0]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[1]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[2]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[3]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[4]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+                <img
+                  src={imageSourcesArray[5]}
+                  width={100}
+                  height={100}
+                  alt="album cover"
+                  style={{
+                    padding: "8px",
+                  }}
+                />
+              </>
+            ) : imageSourcesArray.length == 0 ? (
+              /* default when there are no images */
+              <img
+                src={"http://localhost:3000/default"}
+                width={450}
+                height={450}
+                alt="taylor swift eras tour"
+                style={{
+                  padding: "8px",
+                }}
+              />
+            ) : null}
+          </div>
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              {surpriseSongsArray?.map((surpriseSong, i) => {
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      padding: "4px",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {surpriseSong}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       </>
     ),
     {
-      width: 320,
-      height: 480,
+      width: 640,
+      height: 960,
       fonts: [
         {
           name: "pistilliroman",

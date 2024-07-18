@@ -277,7 +277,7 @@ export type Tour = {
         city: "Cincinnati",
         country: "USA",
         images: [],
-        songs: ["Ivy" , "I Miss You, I'm Sorry" , "Call It What You Want"]
+        songs: ["Ivy" , "I Miss You I'm Sorry" , "Call It What You Want"]
       },
       {
         date: "07-07-2023",
