@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const myFont = localFont({
+const titleFont = localFont({
   src: "../public/pistilliroman.otf",
   display: "swap",
+  variable: "--font-title",
+});
+
+const bodyFont = DM_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
-  title: "Suprise Song Generator",
+  title: "Surprise Song Generator",
   description: "Created by Jasmine",
 };
 
@@ -19,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${myFont.className} bg-cupid-200 text-ebonyclay-950`}>
+      <body
+        className={`${titleFont.variable} ${bodyFont.variable} font-body bg-cupid-200 text-ebonyclay-950`}
+      >
         {children}
       </body>
     </html>

@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        title: ["var(--font-title)", "serif"],
+        body: ["var(--font-body)", "sans-serif"],
+      },
       colors: {
         'cupid': {
           50: "#fef1f7",
