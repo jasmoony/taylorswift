@@ -726,6 +726,10 @@ export let songs = [ {
     },
     {
       albumTitle: "evermore",
+      songTitle: "Cowboy Like Me",
+    },
+    {
+      albumTitle: "evermore",
       songTitle: "right where you left me",
     },
     {

@@ -163,29 +163,48 @@ export async function GET(request: Request) {
       src: uniqueAlbums[2].src, width: 200, height: 200,
       style: { borderRadius: "8px", position: "absolute", bottom: "20px", transform: "rotate(-4deg)" },
     });
-  } else {
+  } else if (n === 4) {
+    // 2x2 grid-like layout
     imageConfigs.push({
-      src: uniqueAlbums[0].src, width: 200, height: 200,
-      style: { borderRadius: "8px", position: "absolute", left: "60px", top: "20px", transform: "rotate(-15deg)" },
+      src: uniqueAlbums[0].src, width: 190, height: 190,
+      style: { borderRadius: "8px", position: "absolute", left: "30px", top: "20px", transform: "rotate(-8deg)" },
     });
     imageConfigs.push({
-      src: uniqueAlbums[1].src, width: 200, height: 200,
-      style: { borderRadius: "8px", position: "absolute", right: "60px", top: "20px", transform: "rotate(12deg)" },
+      src: uniqueAlbums[1].src, width: 190, height: 190,
+      style: { borderRadius: "8px", position: "absolute", right: "30px", top: "30px", transform: "rotate(10deg)" },
     });
     imageConfigs.push({
       src: uniqueAlbums[2].src, width: 190, height: 190,
-      style: { borderRadius: "8px", position: "absolute", left: "140px", top: "80px", transform: "rotate(3deg)" },
+      style: { borderRadius: "8px", position: "absolute", left: "50px", bottom: "20px", transform: "rotate(5deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[3].src, width: 190, height: 190,
+      style: { borderRadius: "8px", position: "absolute", right: "50px", bottom: "10px", transform: "rotate(-6deg)" },
+    });
+  } else {
+    // 5+ albums — two on top, one center, two on bottom
+    imageConfigs.push({
+      src: uniqueAlbums[0].src, width: 170, height: 170,
+      style: { borderRadius: "8px", position: "absolute", left: "30px", top: "10px", transform: "rotate(-10deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[1].src, width: 170, height: 170,
+      style: { borderRadius: "8px", position: "absolute", right: "30px", top: "10px", transform: "rotate(8deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[2].src, width: 180, height: 180,
+      style: { borderRadius: "8px", position: "absolute", left: "155px", top: "100px", transform: "rotate(3deg)" },
     });
     if (uniqueAlbums[3]) {
       imageConfigs.push({
-        src: uniqueAlbums[3].src, width: 180, height: 180,
-        style: { borderRadius: "8px", position: "absolute", left: "40px", bottom: "30px", transform: "rotate(-8deg)" },
+        src: uniqueAlbums[3].src, width: 170, height: 170,
+        style: { borderRadius: "8px", position: "absolute", left: "30px", bottom: "10px", transform: "rotate(6deg)" },
       });
     }
     if (uniqueAlbums[4]) {
       imageConfigs.push({
-        src: uniqueAlbums[4].src, width: 180, height: 180,
-        style: { borderRadius: "8px", position: "absolute", right: "40px", bottom: "30px", transform: "rotate(10deg)" },
+        src: uniqueAlbums[4].src, width: 170, height: 170,
+        style: { borderRadius: "8px", position: "absolute", right: "30px", bottom: "10px", transform: "rotate(-5deg)" },
       });
     }
   }
