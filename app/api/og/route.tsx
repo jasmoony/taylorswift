@@ -11,8 +11,6 @@ type Album = {
   alt: string;
 };
 
-const baseURL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
 const albums = [
   {
     title: "Taylor Swift",
@@ -93,7 +91,9 @@ export async function GET(request: Request) {
     new URL("../../../public/pistilliroman.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
-  const { searchParams } = new URL(request.url);
+  const requestUrl = new URL(request.url);
+  const baseURL = `${requestUrl.protocol}//${requestUrl.host}`;
+  const searchParams = requestUrl.searchParams;
 
   const location = searchParams.get("location");
   const date = searchParams.get("date");
@@ -254,34 +254,75 @@ export async function GET(request: Request) {
             </>
           ) : (
             <>
-              {uniqueAlbums.slice(0, 5).map((album, i) => {
-                const positions = [
-                  { left: "60px", top: "20px", rotate: "-15deg", size: 200 },
-                  { right: "60px", top: "20px", rotate: "12deg", size: 200 },
-                  { left: "140px", top: "80px", rotate: "3deg", size: 190 },
-                  { left: "40px", bottom: "30px", rotate: "-8deg", size: 180 },
-                  { right: "40px", bottom: "30px", rotate: "10deg", size: 180 },
-                ];
-                const pos = positions[i];
-                return (
-                  <img
-                    key={i}
-                    src={album.src}
-                    width={pos.size}
-                    height={pos.size}
-                    alt="album cover"
-                    style={{
-                      borderRadius: "8px",
-                      position: "absolute",
-                      ...(pos.left ? { left: pos.left } : {}),
-                      ...(pos.right ? { right: pos.right } : {}),
-                      ...(pos.top ? { top: pos.top } : {}),
-                      ...(pos.bottom ? { bottom: pos.bottom } : {}),
-                      transform: `rotate(${pos.rotate})`,
-                    }}
-                  />
-                );
-              })}
+              <img
+                src={uniqueAlbums[0].src}
+                width={200}
+                height={200}
+                alt="album cover"
+                style={{
+                  borderRadius: "8px",
+                  position: "absolute",
+                  left: "60px",
+                  top: "20px",
+                  transform: "rotate(-15deg)",
+                }}
+              />
+              <img
+                src={uniqueAlbums[1].src}
+                width={200}
+                height={200}
+                alt="album cover"
+                style={{
+                  borderRadius: "8px",
+                  position: "absolute",
+                  right: "60px",
+                  top: "20px",
+                  transform: "rotate(12deg)",
+                }}
+              />
+              <img
+                src={uniqueAlbums[2].src}
+                width={190}
+                height={190}
+                alt="album cover"
+                style={{
+                  borderRadius: "8px",
+                  position: "absolute",
+                  left: "140px",
+                  top: "80px",
+                  transform: "rotate(3deg)",
+                }}
+              />
+              {uniqueAlbums[3] && (
+                <img
+                  src={uniqueAlbums[3].src}
+                  width={180}
+                  height={180}
+                  alt="album cover"
+                  style={{
+                    borderRadius: "8px",
+                    position: "absolute",
+                    left: "40px",
+                    bottom: "30px",
+                    transform: "rotate(-8deg)",
+                  }}
+                />
+              )}
+              {uniqueAlbums[4] && (
+                <img
+                  src={uniqueAlbums[4].src}
+                  width={180}
+                  height={180}
+                  alt="album cover"
+                  style={{
+                    borderRadius: "8px",
+                    position: "absolute",
+                    right: "40px",
+                    bottom: "30px",
+                    transform: "rotate(10deg)",
+                  }}
+                />
+              )}
             </>
           )}
         </div>
