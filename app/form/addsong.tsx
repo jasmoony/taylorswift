@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Combobox,
   ComboboxInput,
@@ -18,20 +18,27 @@ export function SongForm() {
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
   const [query, setQuery] = useState("");
 
-  const filteredCity =
-    query === ""
-      ? tours
-      : tours.filter((tour) => {
-          return tour.city.toLowerCase().includes(query.toLowerCase());
-        });
+  const filteredCity = useMemo(
+    () =>
+      query === ""
+        ? tours
+        : tours.filter((tour) =>
+            tour.city.toLowerCase().includes(query.toLowerCase())
+          ),
+    [query]
+  );
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (selectedTour) {
+      if (!selectedTour.songs || selectedTour.songs.length === 0) {
+        alert("No surprise songs available for this date yet!");
+        return;
+      }
       const newSearchParams = new URLSearchParams({
         location: selectedTour.city,
         date: selectedTour.date,
-        songs: selectedTour.songs,
+        songs: selectedTour.songs.join(","),
       });
 
       let imageURL = `/api/og/?${newSearchParams.toString()}`;
@@ -72,7 +79,7 @@ export function SongForm() {
                     }}
                     onChange={(event) => setQuery(event.target.value)}
                     className="p-2 mb-2 rounded-lg"
-                    placeholder="enter city"
+                    placeholder="Search by city..."
                     type="text"
                     id="location"
                     name="location"
@@ -101,7 +108,7 @@ export function SongForm() {
           </div>
         </div>
         <button type="submit" className="bg-sunset-500 rounded-lg m-4 w-15">
-          Submit
+          Find Surprise Songs
         </button>
       </form>
       <img src={imageURL} />

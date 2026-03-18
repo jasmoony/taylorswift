@@ -464,10 +464,6 @@ export let songs = [ {
       albumTitle: "1989",
       songTitle: "Is It Over Now?",
     },
-      {
-      albumTitle: "1989",
-      songTitle: "Bad Blood",
-    },
     {
       albumTitle: "reputation",
       songTitle: "...Ready For It?",

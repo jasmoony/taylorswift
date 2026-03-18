@@ -2,8 +2,8 @@ export type Tour = {
     date: string,
     city: string,
     country: string,
-    images: string,
-    songs: string,
+    images: string[],
+    songs: string[],
   };
   export let tours = [
     {

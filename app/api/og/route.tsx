@@ -11,7 +11,7 @@ type Album = {
   alt: string;
 };
 
-const baseURL = "http://localhost:3000";
+const baseURL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 let albums = [
   {
@@ -95,17 +95,20 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
 
-  const location = searchParams.get("location") as string;
-  const date = searchParams.get("date") as string;
-  const surpriseSongs = searchParams.get("songs") as string;
-  console.log({ surpriseSongs });
+  const location = searchParams.get("location");
+  const date = searchParams.get("date");
+  const surpriseSongs = searchParams.get("songs");
+
+  if (!location || !date || !surpriseSongs) {
+    return new Response("Missing required parameters", { status: 400 });
+  }
 
   const surpriseSongsArray = surpriseSongs.split(",");
 
   let playedAlbumsArray = surpriseSongsArray.map((surpriseSong) => {
     return songs.find(
-      (song) => song.songTitle.toLowerCase() == surpriseSong.toLowerCase()
-    )?.albumTitle;
+      (song) => song.songTitle.toLowerCase() === surpriseSong.trim().toLowerCase()
+    )?.albumTitle ?? "other";
   });
 
   console.log(playedAlbumsArray);
@@ -413,7 +416,7 @@ export async function GET(request: Request) {
             ) : imageSourcesArray.length == 0 ? (
               /* default when there are no images */
               <img
-                src={"http://localhost:3000/default"}
+                src={`${baseURL}/default.jpeg`}
                 width={450}
                 height={450}
                 alt="taylor swift eras tour"
