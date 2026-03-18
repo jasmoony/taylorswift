@@ -131,6 +131,67 @@ export async function GET(request: Request) {
     };
   });
 
+  // Build image layout configs — no undefined values, Satori can't handle them
+  type ImageConfig = { src: string; width: number; height: number; style: Record<string, string> };
+  const imageConfigs: ImageConfig[] = [];
+  const n = uniqueAlbums.length;
+
+  if (n === 1) {
+    imageConfigs.push({
+      src: uniqueAlbums[0].src, width: 300, height: 300,
+      style: { borderRadius: "8px", transform: "rotate(-3deg)" },
+    });
+  } else if (n === 2) {
+    imageConfigs.push({
+      src: uniqueAlbums[0].src, width: 250, height: 250,
+      style: { borderRadius: "8px", position: "absolute", left: "40px", transform: "rotate(-12deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[1].src, width: 250, height: 250,
+      style: { borderRadius: "8px", position: "absolute", right: "40px", transform: "rotate(12deg)" },
+    });
+  } else if (n === 3) {
+    imageConfigs.push({
+      src: uniqueAlbums[0].src, width: 220, height: 220,
+      style: { borderRadius: "8px", position: "absolute", left: "30px", top: "40px", transform: "rotate(-12deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[1].src, width: 220, height: 220,
+      style: { borderRadius: "8px", position: "absolute", right: "30px", top: "40px", transform: "rotate(12deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[2].src, width: 200, height: 200,
+      style: { borderRadius: "8px", position: "absolute", bottom: "20px", transform: "rotate(-4deg)" },
+    });
+  } else {
+    imageConfigs.push({
+      src: uniqueAlbums[0].src, width: 200, height: 200,
+      style: { borderRadius: "8px", position: "absolute", left: "60px", top: "20px", transform: "rotate(-15deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[1].src, width: 200, height: 200,
+      style: { borderRadius: "8px", position: "absolute", right: "60px", top: "20px", transform: "rotate(12deg)" },
+    });
+    imageConfigs.push({
+      src: uniqueAlbums[2].src, width: 190, height: 190,
+      style: { borderRadius: "8px", position: "absolute", left: "140px", top: "80px", transform: "rotate(3deg)" },
+    });
+    if (uniqueAlbums[3]) {
+      imageConfigs.push({
+        src: uniqueAlbums[3].src, width: 180, height: 180,
+        style: { borderRadius: "8px", position: "absolute", left: "40px", bottom: "30px", transform: "rotate(-8deg)" },
+      });
+    }
+    if (uniqueAlbums[4]) {
+      imageConfigs.push({
+        src: uniqueAlbums[4].src, width: 180, height: 180,
+        style: { borderRadius: "8px", position: "absolute", right: "40px", bottom: "30px", transform: "rotate(10deg)" },
+      });
+    }
+  }
+
+  const songNames = surpriseSongsArray.map((s) => s.trim());
+
   return new ImageResponse(
     (
       <div
@@ -148,7 +209,6 @@ export async function GET(request: Request) {
           fontFamily: "pistilliroman",
         }}
       >
-        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -156,13 +216,12 @@ export async function GET(request: Request) {
             alignItems: "center",
           }}
         >
-          <div style={{ fontSize: 36 }}>Taylor Swift Eras Tour</div>
-          <div style={{ fontSize: 30 }}>
-            {location}, {date}
+          <div style={{ display: "flex", fontSize: 36 }}>Taylor Swift Eras Tour</div>
+          <div style={{ display: "flex", fontSize: 30 }}>
+            {location + ", " + date}
           </div>
         </div>
 
-        {/* Album covers */}
         <div
           style={{
             display: "flex",
@@ -173,161 +232,18 @@ export async function GET(request: Request) {
             alignItems: "center",
           }}
         >
-          {uniqueAlbums.length === 1 ? (
+          {imageConfigs.map((img, i) => (
             <img
-              src={uniqueAlbums[0].src}
-              width={300}
-              height={300}
+              key={i}
+              src={img.src}
+              width={img.width}
+              height={img.height}
               alt="album cover"
-              style={{
-                borderRadius: "8px",
-                transform: "rotate(-3deg)",
-              }}
+              style={img.style}
             />
-          ) : uniqueAlbums.length === 2 ? (
-            <>
-              <img
-                src={uniqueAlbums[0].src}
-                width={250}
-                height={250}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  left: "40px",
-                  transform: "rotate(-12deg)",
-                }}
-              />
-              <img
-                src={uniqueAlbums[1].src}
-                width={250}
-                height={250}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  right: "40px",
-                  transform: "rotate(12deg)",
-                }}
-              />
-            </>
-          ) : uniqueAlbums.length === 3 ? (
-            <>
-              <img
-                src={uniqueAlbums[0].src}
-                width={220}
-                height={220}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  left: "30px",
-                  top: "40px",
-                  transform: "rotate(-12deg)",
-                }}
-              />
-              <img
-                src={uniqueAlbums[1].src}
-                width={220}
-                height={220}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  right: "30px",
-                  top: "40px",
-                  transform: "rotate(12deg)",
-                }}
-              />
-              <img
-                src={uniqueAlbums[2].src}
-                width={200}
-                height={200}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  bottom: "20px",
-                  transform: "rotate(-4deg)",
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <img
-                src={uniqueAlbums[0].src}
-                width={200}
-                height={200}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  left: "60px",
-                  top: "20px",
-                  transform: "rotate(-15deg)",
-                }}
-              />
-              <img
-                src={uniqueAlbums[1].src}
-                width={200}
-                height={200}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  right: "60px",
-                  top: "20px",
-                  transform: "rotate(12deg)",
-                }}
-              />
-              <img
-                src={uniqueAlbums[2].src}
-                width={190}
-                height={190}
-                alt="album cover"
-                style={{
-                  borderRadius: "8px",
-                  position: "absolute",
-                  left: "140px",
-                  top: "80px",
-                  transform: "rotate(3deg)",
-                }}
-              />
-              {uniqueAlbums[3] && (
-                <img
-                  src={uniqueAlbums[3].src}
-                  width={180}
-                  height={180}
-                  alt="album cover"
-                  style={{
-                    borderRadius: "8px",
-                    position: "absolute",
-                    left: "40px",
-                    bottom: "30px",
-                    transform: "rotate(-8deg)",
-                  }}
-                />
-              )}
-              {uniqueAlbums[4] && (
-                <img
-                  src={uniqueAlbums[4].src}
-                  width={180}
-                  height={180}
-                  alt="album cover"
-                  style={{
-                    borderRadius: "8px",
-                    position: "absolute",
-                    right: "40px",
-                    bottom: "30px",
-                    transform: "rotate(10deg)",
-                  }}
-                />
-              )}
-            </>
-          )}
+          ))}
         </div>
 
-        {/* Song list */}
         <div
           style={{
             display: "flex",
@@ -335,16 +251,17 @@ export async function GET(request: Request) {
             alignItems: "center",
           }}
         >
-          {surpriseSongsArray.map((surpriseSong, i) => (
+          {songNames.map((name, i) => (
             <div
               key={i}
               style={{
+                display: "flex",
                 fontSize: 30,
-                fontWeight: "bold",
+                fontWeight: 700,
                 padding: "2px",
               }}
             >
-              {surpriseSong.trim()}
+              {name}
             </div>
           ))}
         </div>
